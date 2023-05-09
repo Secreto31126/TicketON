@@ -13,6 +13,7 @@ datasource db {
     shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING") // used for migrations
 }
 
+// This should go in Sanity
 model Party {
     id      String      @id @default(autoincrement())
     name    String
