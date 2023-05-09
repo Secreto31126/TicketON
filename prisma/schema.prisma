@@ -13,19 +13,10 @@ datasource db {
   shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING") // used for migrations
 }
 
-// This should go in Sanity
-model Party {
-  id    Int      @id @default(autoincrement())
-  name  String
-  image String
-  date  DateTime
-  Pass  Pass[]
-}
-
 model Pass {
   id      String  @id @default(uuid()) // Public key
   hash    String
-  party   Party   @relation(fields: [partyID], references: [id])
+  party   String
   partyID Int
   active  Boolean @default(false)
 }
