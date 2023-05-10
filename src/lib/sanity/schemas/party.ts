@@ -1,5 +1,6 @@
 import { defineType, defineField } from 'sanity';
 
+// _id is the private key
 const Party = defineType({
 	name: 'party',
 	type: 'document',

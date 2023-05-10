@@ -1,20 +1,15 @@
 import type { PageServerLoad } from './$types';
-import type { Pass } from '@prisma/client';
 
-import prisma from '$lib/server/prisma';
+import { getTicket } from '$lib/server/prisma';
 import { error } from '@sveltejs/kit';
 import { getParty } from '$lib/server/sanity';
 import QRCode from 'qrcode';
 
 export const load = (async ({ params }) => {
-	let ticket: Pass | null;
+	let ticket;
 	if (import.meta.env.PROD) {
 		try {
-			ticket = await prisma.pass.findUnique({
-				where: {
-					id: params.ticket
-				}
-			});
+			ticket = await getTicket(params.ticket);
 		} catch (e) {
 			throw error(500, {
 				message: 'Error fetching ticket'
@@ -37,7 +32,7 @@ export const load = (async ({ params }) => {
 
 	if (ticket.used) {
 		throw error(410, {
-			message: 'Ticket expired'
+			message: 'Ticket used'
 		});
 	}
 
@@ -50,9 +45,15 @@ export const load = (async ({ params }) => {
 		});
 	}
 
+	if (!party) {
+		throw error(404, {
+			message: 'Party not found'
+		});
+	}
+
 	const qr = await QRCode.toDataURL(ticket.id, {
 		errorCorrectionLevel: 'H',
-		width: 1024
+		width: 2048
 	});
 
 	return {
