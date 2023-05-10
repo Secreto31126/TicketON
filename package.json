@@ -6,15 +6,19 @@
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
-		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"check": "npm run check:prisma && npm run check:svelte",
+		"check:svelte": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check:prisma": "prisma generate",
+		"check:svelte:watch": "npm run check:svelte -- --watch",
+		"check:prisma:watch": "npm run check:prisma -- --watch",
 		"test:unit": "vitest",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-auto": "^2.0.0",
+		"@sveltejs/adapter-vercel": "^2.4.3",
 		"@sveltejs/kit": "^1.5.0",
+		"@types/qrcode": "^1.5.0",
 		"@typescript-eslint/eslint-plugin": "^5.45.0",
 		"@typescript-eslint/parser": "^5.45.0",
 		"autoprefixer": "^10.4.14",
@@ -36,7 +40,10 @@
 	"type": "module",
 	"dependencies": {
 		"@prisma/client": "^4.14.0",
+		"@sanity/client": "^6.0.1",
 		"@vercel/postgres": "^0.2.1",
-		"bcryptjs": "^2.4.3"
+		"bcryptjs": "^2.4.3",
+		"qrcode": "^1.5.3",
+		"sanity": "^3.10.1"
 	}
 }

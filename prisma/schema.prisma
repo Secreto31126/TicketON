@@ -17,6 +17,5 @@ model Pass {
   id      String  @id @default(uuid()) // Public key
   hash    String
   party   String
-  partyID Int
-  active  Boolean @default(false)
+  used    Boolean @default(false)
 }
