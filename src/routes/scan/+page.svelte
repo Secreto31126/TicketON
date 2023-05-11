@@ -6,5 +6,5 @@
 
 <div class="flex flex-col items-center">
 	<!-- Camera -->
-	<input type="text" name="Idk" />
+	<input type="text" name="public_key" />
 </div>

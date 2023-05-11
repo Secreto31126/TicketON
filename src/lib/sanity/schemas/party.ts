@@ -52,6 +52,12 @@ const Party = defineType({
 			options: {
 				hotspot: true
 			}
+		}),
+		defineField({
+			title: 'Precio',
+			name: 'price',
+			type: 'number',
+			validation: (Rule) => Rule.required()
 		})
 	]
 });

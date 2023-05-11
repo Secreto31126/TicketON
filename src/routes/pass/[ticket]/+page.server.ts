@@ -46,7 +46,7 @@ export const load = (async ({ params }) => {
 	}
 
 	if (!party) {
-		throw error(404, {
+		throw error(409, {
 			message: 'Party not found'
 		});
 	}
