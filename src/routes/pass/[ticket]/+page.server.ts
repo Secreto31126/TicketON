@@ -1,27 +1,19 @@
 import type { PageServerLoad } from './$types';
+import type { Ticket } from '$lib/types/ticket';
 
-import { getTicket } from '$lib/server/prisma';
+import { kv } from '@vercel/kv';
 import { error } from '@sveltejs/kit';
 import { getParty } from '$lib/server/sanity';
 import QRCode from 'qrcode';
 
 export const load = (async ({ params }) => {
-	let ticket;
-	if (import.meta.env.PROD) {
-		try {
-			ticket = await getTicket(params.ticket);
-		} catch (e) {
-			throw error(500, {
-				message: 'Error fetching ticket'
-			});
-		}
-	} else {
-		ticket = {
-			id: params.ticket,
-			party: 'test',
-			hash: 'test',
-			used: false
-		};
+	let ticket: Ticket | null = null;
+	try {
+		ticket = await kv.hgetall<Ticket>(params.ticket);
+	} catch (e) {
+		throw error(500, {
+			message: 'Error fetching ticket'
+		});
 	}
 
 	if (!ticket) {
@@ -51,14 +43,14 @@ export const load = (async ({ params }) => {
 		});
 	}
 
-	const qr = await QRCode.toDataURL(ticket.id, {
+	const qr = await QRCode.toDataURL(params.ticket, {
 		errorCorrectionLevel: 'H',
 		width: 2048
 	});
 
 	return {
 		ticket: {
-			id: ticket.id,
+			id: params.ticket,
 			qr
 		},
 		party

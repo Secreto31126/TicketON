@@ -4,18 +4,13 @@
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
-		"build": "npm run build:prisma && npm run build:code",
-		"build:code": "vite build",
-		"build:prisma": "prisma generate && prisma db push",
+		"build": "vite build",
 		"preview": "vite preview",
-		"check": "npm run check:prisma && npm run check:svelte",
-		"check:svelte": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:prisma": "prisma generate",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:svelte:watch": "npm run check:svelte -- --watch",
-		"check:prisma:watch": "npm run check:prisma -- --watch",
 		"test:unit": "vitest",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
-		"format": "prettier --plugin-search-dir . --write . && prisma format"
+		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-vercel": "^2.4.3",
@@ -32,7 +27,6 @@
 		"postcss": "^8.4.23",
 		"prettier": "^2.8.0",
 		"prettier-plugin-svelte": "^2.8.1",
-		"prisma": "^4.14.0",
 		"svelte": "^3.54.0",
 		"svelte-check": "^3.0.1",
 		"tailwindcss": "^3.3.2",
@@ -43,10 +37,9 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@prisma/client": "^4.14.0",
 		"@sanity/client": "^6.0.1",
+		"@vercel/kv": "^0.2.0",
 		"@vercel/postgres": "^0.2.1",
-		"bcryptjs": "^2.4.3",
 		"dayjs": "^1.11.7",
 		"mercadopago": "^1.5.16",
 		"qrcode": "^1.5.3",

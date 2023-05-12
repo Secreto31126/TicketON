@@ -1,27 +1,41 @@
 import type { PageServerLoad } from './$types';
-import type { Pass } from '@prisma/client';
+import type { Ticket } from '$lib/types/ticket';
 
-import { addTicket } from '$lib/server/prisma';
+import { kv } from '@vercel/kv';
 import { error } from '@sveltejs/kit';
+import { getParty } from '$lib/server/sanity';
+import dayjs from 'dayjs';
 
 export const load = (async ({ params, url }) => {
 	const payment_id = url.searchParams.get('id');
 
-	let ticket: Pass | undefined;
 	if (payment_id && payment_id !== 'null') {
+		let party;
 		try {
-			ticket = await addTicket(params.party, payment_id);
+			party = await getParty(params.party);
 		} catch (e) {
-			console.error(e);
+			throw error(500, 'Error fetching party');
+		}
+
+		if (!party) {
+			throw error(409, 'Party not found');
+		}
+
+		try {
+			await kv.hset(payment_id, {
+				party: params.party,
+				used: false
+			} satisfies Ticket);
+			await kv.expireat(payment_id, dayjs(party.date).add(1, 'day').unix());
+		} catch (e) {
+			console.error(payment_id, e);
 			throw error(500, 'Failed to add ticket');
 		}
 	}
 
-	console.log('ticket', ticket);
-
 	return {
 		status: params.status,
-		ticket,
+		ticket: payment_id,
 		party: params.party
 	};
 }) satisfies PageServerLoad;
