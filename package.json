@@ -15,7 +15,7 @@
 		"check:prisma:watch": "npm run check:prisma -- --watch",
 		"test:unit": "vitest",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
-		"format": "prettier --plugin-search-dir . --write ."
+		"format": "prettier --plugin-search-dir . --write . && prisma format"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-vercel": "^2.4.3",

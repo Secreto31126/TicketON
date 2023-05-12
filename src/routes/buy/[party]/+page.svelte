@@ -5,14 +5,9 @@
 	import { page } from '$app/stores';
 
 	import { PUBLIC_MERCADO_PAGO_TOKEN } from '$env/static/public';
-	import { redirect } from '@sveltejs/kit';
+	import { goto } from '$app/navigation';
 
 	export let data: PageData;
-
-	let success: any = null;
-	$: if (success) {
-		throw redirect(303, $page.url.pathname + '/success?' + new URLSearchParams(success));
-	}
 
 	let div: HTMLDivElement;
 	let paymentBrickController: any;
@@ -48,12 +43,21 @@
 						body: JSON.stringify(formData)
 					});
 
-					if (!res.ok) {
-						throw new Error('Failed to submit payment form');
+					const url = new URL($page.url);
+					url.pathname += res.ok ? '/success' : '/failure';
+
+					if (res.ok) {
+						for (const [key, value] of Object.entries(await res.json())) {
+							url.searchParams.append(
+								key,
+								typeof value === 'object' && value !== null
+									? JSON.stringify(value)
+									: (value as string)
+							);
+						}
 					}
 
-					success = await res.json();
-					return;
+					return await goto(url);
 				}
 			},
 			onError: (error: any) => {

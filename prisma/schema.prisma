@@ -14,8 +14,9 @@ datasource db {
 }
 
 model Pass {
-  id      String  @id @default(uuid()) // Public key
-  hash    String
-  party   String
-  used    Boolean @default(false)
+  id         String  @id @default(uuid()) // Public key
+  payment_id String
+  hash       String
+  party      String
+  used       Boolean @default(false)
 }

@@ -5,12 +5,9 @@ import mercadopago from 'mercadopago';
 import { getParty } from '$lib/server/sanity';
 import { error, json } from '@sveltejs/kit';
 
-import { MERCADO_PAGO_CLIENT_ID, MERCADO_PAGO_CLIENT_SECRET } from '$env/static/private';
+import { MERCADO_PAGO_TOKEN } from '$env/static/private';
 
-mercadopago.configure({
-	client_id: MERCADO_PAGO_CLIENT_ID,
-	client_secret: MERCADO_PAGO_CLIENT_SECRET
-});
+mercadopago.configurations.setAccessToken(MERCADO_PAGO_TOKEN);
 
 export const POST: RequestHandler = async ({ params, request }) => {
 	let party;
