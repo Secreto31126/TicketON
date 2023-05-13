@@ -17,9 +17,9 @@
 	let party = form?.party ?? '';
 	let ticket = '';
 
-	let scan: boolean = false;
 	let qrScanner: QrScanner;
 	let camera: HTMLVideoElement;
+	let scan_active: boolean = false;
 	let camera_overlay: HTMLDivElement;
 	let camera_list: Awaited<ReturnType<typeof QrScanner.listCameras>> | null = null;
 	let selected_camera: string;
@@ -34,11 +34,9 @@
 			async (result) => {
 				console.log(result);
 				ticket = result.data;
-				await tick();
-				form_html.dispatchEvent(new Event('submit'));
 			},
 			{
-				maxScansPerSecond: 5,
+				maxScansPerSecond: 1,
 				overlay: camera_overlay,
 				highlightCodeOutline: true,
 				returnDetailedScanResult: true
@@ -47,14 +45,15 @@
 
 		camera_list = await QrScanner.listCameras(true);
 
-		scan = true;
+		await tick();
+		scan_active = true;
 	});
 
 	onDestroy(() => {
 		qrScanner?.destroy();
 	});
 
-	$: if (scan) {
+	$: if (scan_active) {
 		qrScanner?.start();
 	} else {
 		qrScanner?.stop();
@@ -62,6 +61,10 @@
 
 	$: if (selected_camera) {
 		qrScanner?.setCamera(selected_camera);
+	}
+
+	$: if (scan_active && ticket) {
+		form_html.dispatchEvent(new Event('submit'));
 	}
 </script>
 
@@ -84,7 +87,7 @@
 
 	<!-- Camera -->
 	<!-- svelte-ignore a11y-media-has-caption doesn't apply -->
-	<video bind:this={camera} class:hide={!scan} class="h-[60vh]">
+	<video bind:this={camera} class:hide={!scan_active} class="h-[60vh]">
 		<div class="border-green-600 rounded-lg" bind:this={camera_overlay} in:scale>
 			{#await scanner_animation}
 				<!-- Fade in -->
@@ -102,8 +105,8 @@
 	</video>
 
 	<!-- Toggle Camera -->
-	<button on:click|preventDefault={() => (scan = !scan)}>
-		{scan ? 'Desactivar' : 'Activar'} cámara
+	<button on:click|preventDefault={() => (scan_active = !scan_active)}>
+		{scan_active ? 'Desactivar' : 'Activar'} cámara
 	</button>
 
 	<!-- QR Value -->
@@ -111,12 +114,12 @@
 		type="text"
 		name="ticket"
 		bind:value={ticket}
-		class:hide={scan}
+		class:hide={scan_active}
 		class="border-2 rounded-md border-black text-center"
 	/>
 
 	<!-- Submit -->
-	<button type="submit" class:hide={scan}>Verificar</button>
+	<button type="submit" class:hide={scan_active}>Verificar</button>
 </form>
 
 {#if form}
