@@ -1,6 +1,5 @@
 <script lang="ts">
 	import QrScanner from 'qr-scanner';
-	import { spring } from 'svelte/motion';
 	import { fade, scale } from 'svelte/transition';
 	import { onMount, onDestroy, tick } from 'svelte';
 
@@ -11,7 +10,6 @@
 
 	let qrScanner: QrScanner;
 	let camera: HTMLVideoElement;
-	let camera_overlay: HTMLDivElement;
 	let camera_list: Awaited<ReturnType<typeof QrScanner.listCameras>> | null = null;
 	let selected_camera: string;
 
@@ -24,14 +22,6 @@
 					}, duration)
 			  )
 			: Promise.reject();
-
-	let coords = spring(
-		{ x: 0, y: 0 },
-		{
-			stiffness: 0.1,
-			damping: 0.5
-		}
-	);
 
 	onMount(async () => {
 		if (!(await QrScanner.hasCamera())) {
@@ -84,10 +74,10 @@
 {/if}
 
 <!-- Camera -->
-<div>
+<div class="relative">
 	<!-- svelte-ignore a11y-media-has-caption doesn't apply -->
 	<video bind:this={camera} class:hide-video={!scan_active} class="h-[60vh]" />
-	<div class="relative border-green-600 rounded-lg w-full h-full" bind:this={camera_overlay}>
+	<div class="absolute top-0 left-0 flex items-center justify-center w-full h-full z-10">
 		{#await scanner_animation}
 			<!-- Fade in -->
 			<div transition:fade>
