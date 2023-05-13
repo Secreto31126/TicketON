@@ -3,14 +3,23 @@
 
 	import QrScanner from 'qr-scanner';
 	import { enhance } from '$app/forms';
-	import { onMount, onDestroy, tick } from 'svelte';
+	import { spring } from 'svelte/motion';
 	import { fade, scale } from 'svelte/transition';
+	import { onMount, onDestroy, tick } from 'svelte';
 
 	export let data: PageData;
 	export let form: ActionData;
 
 	const duration = 1000;
 	const scanner_animation = new Promise((r) => (form ? setTimeout(r, duration) : r(void 0)));
+
+	let coords = spring(
+		{ x: 0, y: 0 },
+		{
+			stiffness: 0.1,
+			damping: 0.5
+		}
+	);
 
 	let form_html: HTMLFormElement;
 
@@ -31,9 +40,9 @@
 
 		qrScanner = new QrScanner(
 			camera,
-			async (result) => {
-				console.log(result);
+			(result) => {
 				ticket = result.data;
+				coords.set(result.cornerPoints[0]);
 			},
 			{
 				maxScansPerSecond: 1,
@@ -63,8 +72,10 @@
 		qrScanner?.setCamera(selected_camera);
 	}
 
+	let submit: HTMLButtonElement;
 	$: if (scan_active && ticket) {
-		form_html.dispatchEvent(new Event('submit'));
+		console.log(party, ticket);
+		submit?.click();
 	}
 </script>
 
@@ -87,22 +98,7 @@
 
 	<!-- Camera -->
 	<!-- svelte-ignore a11y-media-has-caption doesn't apply -->
-	<video bind:this={camera} class:hide={!scan_active} class="h-[60vh]">
-		<div class="border-green-600 rounded-lg" bind:this={camera_overlay} in:scale>
-			{#await scanner_animation}
-				<!-- Fade in -->
-				<div transition:fade>
-					{#if form?.success}
-						<img src="/checkmark.svg" alt="Accepted" />
-					{:else if form}
-						<img src="/cross.svg" alt="Rejected" />
-					{/if}
-				</div>
-			{:then}
-				<!-- Fade out -->
-			{/await}
-		</div>
-	</video>
+	<video bind:this={camera} class:hide={!scan_active} class="h-[60vh]" />
 
 	<!-- Toggle Camera -->
 	<button on:click|preventDefault={() => (scan_active = !scan_active)}>
@@ -119,8 +115,24 @@
 	/>
 
 	<!-- Submit -->
-	<button type="submit" class:hide={scan_active}>Verificar</button>
+	<button type="submit" class:hide={scan_active} bind:this={submit}>Verificar</button>
 </form>
+
+<!-- Scan border -->
+<div class="border-2 border-green-600 rounded-lg w-4 h-4" bind:this={camera_overlay} in:scale>
+	{#await scanner_animation}
+		<!-- Fade in -->
+		<div transition:fade>
+			{#if form?.success}
+				<img src="/checkmark.svg" alt="Accepted" />
+			{:else if form}
+				<img src="/cross.svg" alt="Rejected" />
+			{/if}
+		</div>
+	{:then}
+		<!-- Fade out -->
+	{/await}
+</div>
 
 {#if form}
 	<div class="text-center">
