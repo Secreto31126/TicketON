@@ -11,11 +11,15 @@
 	let party = form?.party ?? (data.parties.length === 1 ? data.parties[0].slug : '');
 	let ticket = '';
 
-	let scan_active: boolean;
+	// Everytime form changes, set animated to false
+	$: animated = form && false;
 
-	$: success = form?.success ?? null;
+	let scan_active: boolean;
+	$: success = !animated ? form?.success ?? null : null;
+
 	const duration = 1000;
 	$: if (success !== null) {
+		animated = true;
 		setTimeout(() => (success = null), duration);
 	}
 
