@@ -20,6 +20,7 @@
 	const duration = 1000;
 	$: if (success !== null) {
 		animated = true;
+		console.log('animated');
 		setTimeout(() => (success = null), duration);
 	}
 
