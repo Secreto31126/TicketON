@@ -48,7 +48,6 @@
 			},
 			{
 				maxScansPerSecond: 1,
-				overlay: camera_overlay,
 				highlightCodeOutline: true,
 				returnDetailedScanResult: true
 			}
@@ -85,9 +84,10 @@
 {/if}
 
 <!-- Camera -->
-<!-- svelte-ignore a11y-media-has-caption doesn't apply -->
-<video bind:this={camera} class:hide-video={!scan_active} class="h-[60vh]">
-	<div class="border-green-600 rounded-lg" bind:this={camera_overlay}>
+<div>
+	<!-- svelte-ignore a11y-media-has-caption doesn't apply -->
+	<video bind:this={camera} class:hide-video={!scan_active} class="h-[60vh]" />
+	<div class="relative border-green-600 rounded-lg w-full h-full" bind:this={camera_overlay}>
 		{#await scanner_animation}
 			<!-- Fade in -->
 			<div transition:fade>
@@ -104,7 +104,7 @@
 			<!-- Fade out -->
 		{/await}
 	</div>
-</video>
+</div>
 
 <style>
 	.hide-video {
