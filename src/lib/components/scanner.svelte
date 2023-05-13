@@ -7,8 +7,6 @@
 	export let scan_active: boolean = false;
 	export let data: string = '';
 
-	$: console.log(success);
-
 	let qrScanner: QrScanner;
 	let camera: HTMLVideoElement;
 	let camera_list: Awaited<ReturnType<typeof QrScanner.listCameras>> | null = null;

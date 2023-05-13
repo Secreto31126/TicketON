@@ -16,11 +16,12 @@
 
 	let scan_active: boolean;
 	$: success = !animated ? form?.success ?? null : null;
+	$: console.log('success', success);
 
 	const duration = 1000;
 	$: if (success !== null) {
 		animated = true;
-		console.log('animated');
+		console.log('animated', success);
 		setTimeout(() => (success = null), duration);
 	}
 
