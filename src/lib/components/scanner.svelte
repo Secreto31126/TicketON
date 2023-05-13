@@ -42,9 +42,9 @@
 		qrScanner = new QrScanner(
 			camera,
 			(result) => {
-				data = result.data;
-				console.log(result.cornerPoints);
-				coords.set(result.cornerPoints[0]);
+				if (result.data !== data) {
+					data = result.data;
+				}
 			},
 			{
 				maxScansPerSecond: 1,
@@ -86,25 +86,25 @@
 
 <!-- Camera -->
 <!-- svelte-ignore a11y-media-has-caption doesn't apply -->
-<video bind:this={camera} class:hide-video={!scan_active} class="h-[60vh]">
-	<div bind:this={camera_overlay}>
-		{#await scanner_animation}
-			<!-- Fade in -->
-			<div transition:fade>
-				<!-- Scale -->
-				<div in:scale>
-					{#if success}
-						<img src="/checkmark.svg" alt="Accepted" class="w-full h-full" />
-					{:else}
-						<img src="/cross.svg" alt="Rejected" class="w-full h-full" />
-					{/if}
-				</div>
+<video bind:this={camera} class:hide-video={!scan_active} class="h-[60vh]" />
+
+<div bind:this={camera_overlay}>
+	{#await scanner_animation}
+		<!-- Fade in -->
+		<div transition:fade>
+			<!-- Scale -->
+			<div in:scale>
+				{#if success}
+					<img src="/checkmark.svg" alt="Accepted" class="w-full h-full" />
+				{:else}
+					<img src="/cross.svg" alt="Rejected" class="w-full h-full" />
+				{/if}
 			</div>
-		{:then}
-			<!-- Fade out -->
-		{/await}
-	</div>
-</video>
+		</div>
+	{:then}
+		<!-- Fade out -->
+	{/await}
+</div>
 
 <style>
 	.hide-video {

@@ -3,6 +3,7 @@
 
 	import { enhance } from '$app/forms';
 	import Scanner from '$lib/components/scanner.svelte';
+	import { tick } from 'svelte/types/runtime/internal/scheduler';
 
 	export let data: PageData;
 	export let form: ActionData;
@@ -16,9 +17,10 @@
 	$: success = form?.success ?? null;
 
 	let submit: HTMLButtonElement;
-	$: if (scan_active && ticket && input_html?.value && submit && success === null) {
+	$: console.log(scan_active, ticket, submit, success);
+	$: if (scan_active && ticket && submit && success === null) {
 		console.log(party, ticket);
-		console.log(input_html?.value);
+		tick().then(() => console.log(input_html?.value));
 		submit.click();
 	}
 </script>
