@@ -24,7 +24,7 @@
 	let camera_list: Awaited<ReturnType<typeof QrScanner.listCameras>> | null = null;
 	let selected_camera: string;
 	onMount(async () => {
-		if (!QrScanner.hasCamera()) {
+		if (!(await QrScanner.hasCamera())) {
 			alert('No se detectó ninguna cámara');
 			return;
 		}
@@ -85,7 +85,7 @@
 
 	<!-- Camera -->
 	<!-- svelte-ignore a11y-media-has-caption doesn't apply -->
-	<video bind:this={camera} class:hide={!scan} class="h-2/3">
+	<video bind:this={camera} class:hide={!scan} class="h-[60vh]">
 		<div class="border-green-600 rounded-lg" bind:this={camera_overlay} in:scale>
 			{#await scanner_animation}
 				<!-- Fade in -->
