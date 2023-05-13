@@ -32,13 +32,14 @@
 		qrScanner = new QrScanner(
 			camera,
 			async (result) => {
+				console.log(result);
 				ticket = result.data;
 				await tick();
 				form_html.dispatchEvent(new Event('submit'));
 			},
 			{
 				maxScansPerSecond: 5,
-				// overlay: camera_overlay,
+				overlay: camera_overlay,
 				highlightCodeOutline: true,
 				returnDetailedScanResult: true
 			}
@@ -85,20 +86,20 @@
 	<!-- Camera -->
 	<!-- svelte-ignore a11y-media-has-caption doesn't apply -->
 	<video bind:this={camera} class:hide={!scan} class="h-2/3">
-		<!-- <div class="border-green-600 rounded-lg" bind:this={camera_overlay} in:scale>
-			{#await scanner_animation} -->
-		<!-- Fade in -->
-		<!-- <div transition:fade>
+		<div class="border-green-600 rounded-lg" bind:this={camera_overlay} in:scale>
+			{#await scanner_animation}
+				<!-- Fade in -->
+				<div transition:fade>
 					{#if form?.success}
 						<img src="/checkmark.svg" alt="Accepted" />
 					{:else if form}
 						<img src="/cross.svg" alt="Rejected" />
 					{/if}
 				</div>
-			{:then} -->
-		<!-- Fade out -->
-		<!-- {/await}
-		</div> -->
+			{:then}
+				<!-- Fade out -->
+			{/await}
+		</div>
 	</video>
 
 	<!-- Toggle Camera -->
@@ -107,7 +108,13 @@
 	</button>
 
 	<!-- QR Value -->
-	<input type="text" name="ticket" bind:value={ticket} class:hide={scan} />
+	<input
+		type="text"
+		name="ticket"
+		bind:value={ticket}
+		class:hide={scan}
+		class="border-2 rounded-md border-black text-center"
+	/>
 
 	<!-- Submit -->
 	<button type="submit" class:hide={scan}>Verificar</button>
