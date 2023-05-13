@@ -7,23 +7,23 @@
 	export let data: PageData;
 	export let form: ActionData;
 
-	let form_html: HTMLFormElement;
+	let input_html: HTMLInputElement;
 
 	let party = form?.party ?? '';
 	let ticket = '';
 
 	let scan_active: boolean;
+	$: success = form?.success ?? null;
 
 	let submit: HTMLButtonElement;
-	$: if (scan_active && ticket && submit) {
+	$: if (scan_active && ticket && submit && success === null) {
 		console.log(party, ticket);
+		console.log(input_html?.value);
 		submit.click();
 	}
-
-	$: success = form?.success ?? null;
 </script>
 
-<form class="flex flex-col items-center space-y-4" method="POST" use:enhance bind:this={form_html}>
+<form class="flex flex-col items-center space-y-4" method="POST" use:enhance>
 	<!-- Party -->
 	<select name="party" bind:value={party}>
 		{#each data.parties as { name, slug }}
@@ -44,6 +44,7 @@
 		<input
 			type="text"
 			name="ticket"
+			bind:this={input_html}
 			bind:value={ticket}
 			class:hide={scan_active}
 			class="border-2 rounded-md border-black text-center"

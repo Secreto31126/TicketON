@@ -16,7 +16,14 @@
 	let selected_camera: string;
 
 	const scanner_animation =
-		success !== null ? new Promise<void>((r) => setTimeout(r, duration)) : Promise.reject();
+		success !== null
+			? new Promise<void>((r) =>
+					setTimeout(() => {
+						success = null;
+						r();
+					}, duration)
+			  )
+			: Promise.reject();
 
 	let coords = spring(
 		{ x: 0, y: 0 },
