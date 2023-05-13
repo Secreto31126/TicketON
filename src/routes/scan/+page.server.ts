@@ -28,8 +28,6 @@ export const actions = {
 		const data = await request.formData();
 
 		const party = data.get('party') as string | null;
-		const id = data.get('ticket') as string | null;
-
 		if (!party) {
 			return fail(400, {
 				message: 'Missing party slug',
@@ -37,6 +35,7 @@ export const actions = {
 			});
 		}
 
+		const id = data.get('ticket') as string | null;
 		if (!id) {
 			return fail(400, {
 				party,

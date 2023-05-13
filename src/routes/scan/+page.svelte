@@ -42,6 +42,7 @@
 			camera,
 			(result) => {
 				ticket = result.data;
+				console.log(result.cornerPoints);
 				coords.set(result.cornerPoints[0]);
 			},
 			{
@@ -75,6 +76,7 @@
 	let submit: HTMLButtonElement;
 	$: if (scan_active && ticket) {
 		console.log(party, ticket);
+		console.log(form_html);
 		submit?.click();
 	}
 </script>
@@ -98,7 +100,7 @@
 
 	<!-- Camera -->
 	<!-- svelte-ignore a11y-media-has-caption doesn't apply -->
-	<video bind:this={camera} class:hide={!scan_active} class="h-[60vh]" />
+	<video bind:this={camera} class:hide-video={!scan_active} class="h-[60vh]" />
 
 	<!-- Toggle Camera -->
 	<button on:click|preventDefault={() => (scan_active = !scan_active)}>
@@ -150,6 +152,10 @@
 
 <style>
 	.hide {
+		display: none;
+	}
+
+	.hide-video {
 		/* Safari breaks if you use diplay: none; */
 		opacity: 0;
 		width: 0px;
