@@ -46,7 +46,6 @@
 		);
 
 		camera_list = await QrScanner.listCameras(true);
-		selected_camera = camera_list[0]?.id;
 
 		scan = true;
 	});
