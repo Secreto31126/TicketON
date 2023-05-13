@@ -84,7 +84,7 @@
 
 	<!-- Camera -->
 	<!-- svelte-ignore a11y-media-has-caption doesn't apply -->
-	<video bind:this={camera} class:hide={!scan}>
+	<video bind:this={camera} class:hide={!scan} class="h-2/3">
 		<div class="border-green-600 rounded-lg" bind:this={camera_overlay} in:scale>
 			{#await scanner_animation}
 				<!-- Fade in -->
