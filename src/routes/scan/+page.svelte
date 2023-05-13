@@ -16,7 +16,7 @@
 	$: success = form?.success ?? null;
 
 	let submit: HTMLButtonElement;
-	$: if (scan_active && ticket && submit && success === null) {
+	$: if (scan_active && ticket && input_html?.value && submit && success === null) {
 		console.log(party, ticket);
 		console.log(input_html?.value);
 		submit.click();
