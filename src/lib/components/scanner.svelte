@@ -23,7 +23,7 @@
 						r();
 					}, duration)
 			  )
-			: Promise.reject();
+			: null;
 
 	onMount(async () => {
 		if (!(await QrScanner.hasCamera())) {
@@ -75,27 +75,34 @@
 	</select>
 {/if}
 
+<svelte:head>
+	<link rel="prefetch" href="/checkmark.svg" />
+	<link rel="prefetch" href="/cross.svg" />
+</svelte:head>
+
 <!-- Camera -->
 <div class="relative">
 	<!-- svelte-ignore a11y-media-has-caption doesn't apply -->
 	<video bind:this={camera} class:hide-video={!scan_active} class="h-[60vh]" />
-	<div class="absolute top-0 left-0 flex items-center justify-center w-full h-full z-10">
-		{#await scanner_animation}
-			<!-- Fade in -->
-			<div transition:fade>
-				<!-- Scale -->
-				<div in:scale>
-					{#if success}
-						<img src="/checkmark.svg" alt="Accepted" class="w-full h-full" />
-					{:else}
-						<img src="/cross.svg" alt="Rejected" class="w-full h-full" />
-					{/if}
+	{#if success !== null}
+		<div class="absolute top-0 left-0 flex items-center justify-center w-full h-full z-10">
+			{#await scanner_animation}
+				<!-- Fade in -->
+				<div transition:fade>
+					<!-- Scale -->
+					<div in:scale>
+						{#if success}
+							<img src="/checkmark.svg" alt="Accepted" class="w-full h-full" />
+						{:else}
+							<img src="/cross.svg" alt="Rejected" class="w-full h-full" />
+						{/if}
+					</div>
 				</div>
-			</div>
-		{:then}
-			<!-- Fade out -->
-		{/await}
-	</div>
+			{:then}
+				<!-- Fade out -->
+			{/await}
+		</div>
+	{/if}
 </div>
 
 <style>
