@@ -21,7 +21,7 @@
 	let qrScanner: QrScanner;
 	let camera: HTMLVideoElement;
 	let camera_overlay: HTMLDivElement;
-	let camera_list: Awaited<ReturnType<typeof QrScanner.listCameras>> = [];
+	let camera_list: Awaited<ReturnType<typeof QrScanner.listCameras>> | null = null;
 	let selected_camera: string;
 	onMount(async () => {
 		if (!QrScanner.hasCamera()) {
@@ -74,11 +74,13 @@
 	</select>
 
 	<!-- Camera Picker -->
-	<select name="camera" bind:value={selected_camera}>
-		{#each camera_list as { label, id }}
-			<option value={id}>{label}</option>
-		{/each}
-	</select>
+	{#if camera_list}
+		<select name="camera" bind:value={selected_camera}>
+			{#each camera_list as { label, id }}
+				<option value={id}>{label}</option>
+			{/each}
+		</select>
+	{/if}
 
 	<!-- Camera -->
 	<!-- svelte-ignore a11y-media-has-caption doesn't apply -->
@@ -112,15 +114,20 @@
 </form>
 
 {#if form}
-	{#if form.success}
-		<p class="text-green-600">¡Bienvenido!</p>
-	{:else}
-		<p class="text-red-600">{form.message}</p>
-	{/if}
+	<div class="text-center">
+		{#if form.success}
+			<p class="text-green-600">¡Bienvenido!</p>
+		{:else}
+			<p class="text-red-600">{form.message}</p>
+		{/if}
+	</div>
 {/if}
 
 <style>
 	.hide {
-		display: none;
+		/* Safari breaks if you use diplay: none; */
+		opacity: 0;
+		width: 0px;
+		height: 0px;
 	}
 </style>
