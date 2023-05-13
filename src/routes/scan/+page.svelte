@@ -11,7 +11,7 @@
 	export let form: ActionData;
 
 	const duration = 1000;
-	const scanner_animation = new Promise((r) => (form ? setTimeout(r, duration) : r(void 0)));
+	const scanner_animation = new Promise<void>((r) => (form ? setTimeout(r, duration) : r()));
 
 	let coords = spring(
 		{ x: 0, y: 0 },
@@ -120,25 +120,22 @@
 	<button type="submit" class:hide={scan_active} bind:this={submit}>Verificar</button>
 </form>
 
-<!-- Scan border -->
-<div
-	class="border-2 border-green-600 rounded-lg absolute w-4 h-4"
-	bind:this={camera_overlay}
-	in:scale
->
-	{#await scanner_animation}
-		<!-- Fade in -->
-		<div transition:fade>
+<!-- Ticket status -->
+{#await scanner_animation}
+	<!-- Fade in -->
+	<div transition:fade>
+		<!-- Scale -->
+		<div in:scale>
 			{#if form?.success}
 				<img src="/checkmark.svg" alt="Accepted" />
 			{:else if form}
 				<img src="/cross.svg" alt="Rejected" />
 			{/if}
 		</div>
-	{:then}
-		<!-- Fade out -->
-	{/await}
-</div>
+	</div>
+{:then}
+	<!-- Fade out -->
+{/await}
 
 {#if form}
 	<div class="text-center">
