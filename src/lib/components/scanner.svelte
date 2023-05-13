@@ -8,6 +8,8 @@
 	export let data: string = '';
 	export let duration = 1000;
 
+	$: console.log(success);
+
 	let qrScanner: QrScanner;
 	let camera: HTMLVideoElement;
 	let camera_list: Awaited<ReturnType<typeof QrScanner.listCameras>> | null = null;
