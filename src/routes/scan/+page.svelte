@@ -76,7 +76,6 @@
 	let submit: HTMLButtonElement;
 	$: if (scan_active && ticket) {
 		console.log(party, ticket);
-		console.log(form_html);
 		submit?.click();
 	}
 </script>
@@ -89,53 +88,56 @@
 		{/each}
 	</select>
 
-	<!-- Camera Picker -->
-	{#if camera_list}
-		<select name="camera" bind:value={selected_camera}>
-			{#each camera_list as { label, id }}
-				<option value={id}>{label}</option>
-			{/each}
-		</select>
+	{#if !party}
+		<!-- Camera Picker -->
+		{#if camera_list}
+			<select name="camera" bind:value={selected_camera}>
+				{#each camera_list as { label, id }}
+					<option value={id}>{label}</option>
+				{/each}
+			</select>
+		{/if}
+
+		<!-- Camera -->
+		<!-- svelte-ignore a11y-media-has-caption doesn't apply -->
+		<video bind:this={camera} class:hide-video={!scan_active} class="h-[60vh]">
+			<div bind:this={camera_overlay}>
+				{#await scanner_animation}
+					<!-- Fade in -->
+					<div transition:fade>
+						<!-- Scale -->
+						<div in:scale>
+							{#if form?.success}
+								<img src="/checkmark.svg" alt="Accepted" class="w-full h-full" />
+							{:else if form}
+								<img src="/cross.svg" alt="Rejected" class="w-full h-full" />
+							{/if}
+						</div>
+					</div>
+				{:then}
+					<!-- Fade out -->
+				{/await}
+			</div>
+		</video>
+
+		<!-- Toggle Camera -->
+		<button on:click|preventDefault={() => (scan_active = !scan_active)}>
+			{scan_active ? 'Desactivar' : 'Activar'} cámara
+		</button>
+
+		<!-- QR Value -->
+		<input
+			type="text"
+			name="ticket"
+			bind:value={ticket}
+			class:hide={scan_active}
+			class="border-2 rounded-md border-black text-center"
+		/>
+
+		<!-- Submit -->
+		<button type="submit" class:hide={scan_active} bind:this={submit}>Verificar</button>
 	{/if}
-
-	<!-- Camera -->
-	<!-- svelte-ignore a11y-media-has-caption doesn't apply -->
-	<video bind:this={camera} class:hide-video={!scan_active} class="h-[60vh]" />
-
-	<!-- Toggle Camera -->
-	<button on:click|preventDefault={() => (scan_active = !scan_active)}>
-		{scan_active ? 'Desactivar' : 'Activar'} cámara
-	</button>
-
-	<!-- QR Value -->
-	<input
-		type="text"
-		name="ticket"
-		bind:value={ticket}
-		class:hide={scan_active}
-		class="border-2 rounded-md border-black text-center"
-	/>
-
-	<!-- Submit -->
-	<button type="submit" class:hide={scan_active} bind:this={submit}>Verificar</button>
 </form>
-
-<!-- Ticket status -->
-{#await scanner_animation}
-	<!-- Fade in -->
-	<div transition:fade>
-		<!-- Scale -->
-		<div in:scale>
-			{#if form?.success}
-				<img src="/checkmark.svg" alt="Accepted" />
-			{:else if form}
-				<img src="/cross.svg" alt="Rejected" />
-			{/if}
-		</div>
-	</div>
-{:then}
-	<!-- Fade out -->
-{/await}
 
 {#if form}
 	<div class="text-center">
