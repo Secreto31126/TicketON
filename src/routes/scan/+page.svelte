@@ -8,19 +8,13 @@
 	export let data: PageData;
 	export let form: ActionData;
 
-	let input_html: HTMLInputElement;
-
-	let party = form?.party ?? '';
+	let party = form?.party ?? (data.parties.length === 1 ? data.parties[0].slug : '');
 	let ticket = '';
 
 	let scan_active: boolean;
 	$: success = form?.success ?? null;
 
 	let submit: HTMLButtonElement;
-	$: console.log(ticket);
-	$: console.log(submit);
-	$: console.log(success);
-	$: console.log(scan_active, ticket, submit, success);
 	$: if (scan_active && ticket && submit && success === null) {
 		console.log(party, ticket);
 		tick().then(() => submit.click());
@@ -48,7 +42,6 @@
 		<input
 			type="text"
 			name="ticket"
-			bind:this={input_html}
 			bind:value={ticket}
 			class:hide={scan_active}
 			class="border-2 rounded-md border-black text-center"
