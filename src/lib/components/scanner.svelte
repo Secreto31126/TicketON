@@ -6,7 +6,6 @@
 	export let success: boolean | null = false;
 	export let scan_active: boolean = false;
 	export let data: string = '';
-	export let duration = 1000;
 
 	$: console.log(success);
 
@@ -14,16 +13,6 @@
 	let camera: HTMLVideoElement;
 	let camera_list: Awaited<ReturnType<typeof QrScanner.listCameras>> | null = null;
 	let selected_camera: string;
-
-	const scanner_animation =
-		success !== null
-			? new Promise<void>((r) =>
-					setTimeout(() => {
-						success = null;
-						r();
-					}, duration)
-			  )
-			: null;
 
 	onMount(async () => {
 		if (!(await QrScanner.hasCamera())) {
@@ -86,21 +75,17 @@
 	<video bind:this={camera} class:hide-video={!scan_active} class="h-[60vh]" />
 	{#if success !== null}
 		<div class="absolute top-0 left-0 flex items-center justify-center w-full h-full z-10">
-			{#await scanner_animation}
-				<!-- Fade in -->
-				<div transition:fade>
-					<!-- Scale -->
-					<div in:scale>
-						{#if success}
-							<img src="/checkmark.svg" alt="Accepted" class="w-full h-full" />
-						{:else}
-							<img src="/cross.svg" alt="Rejected" class="w-full h-full" />
-						{/if}
-					</div>
+			<!-- Fade in -->
+			<div transition:fade>
+				<!-- Scale -->
+				<div in:scale>
+					{#if success}
+						<img src="/checkmark.svg" alt="Accepted" class="w-full h-full" />
+					{:else}
+						<img src="/cross.svg" alt="Rejected" class="w-full h-full" />
+					{/if}
 				</div>
-			{:then}
-				<!-- Fade out -->
-			{/await}
+			</div>
 		</div>
 	{/if}
 </div>

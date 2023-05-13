@@ -12,7 +12,12 @@
 	let ticket = '';
 
 	let scan_active: boolean;
+
 	$: success = form?.success ?? null;
+	const duration = 1000;
+	$: if (success !== null) {
+		setTimeout(() => (success = null), duration);
+	}
 
 	let submit: HTMLButtonElement;
 	$: if (scan_active && ticket && submit && success === null) {
