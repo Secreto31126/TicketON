@@ -23,7 +23,7 @@
 	$: console.log(scan_active, ticket, submit, success);
 	$: if (scan_active && ticket && submit && success === null) {
 		console.log(party, ticket);
-		tick().then(submit.click);
+		tick().then(() => submit.click());
 	}
 </script>
 
