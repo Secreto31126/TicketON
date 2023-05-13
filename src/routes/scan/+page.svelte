@@ -88,7 +88,7 @@
 		{/each}
 	</select>
 
-	{#if !party}
+	{#if party}
 		<!-- Camera Picker -->
 		{#if camera_list}
 			<select name="camera" bind:value={selected_camera}>
