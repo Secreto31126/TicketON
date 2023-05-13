@@ -38,7 +38,7 @@
 			},
 			{
 				maxScansPerSecond: 5,
-				overlay: camera_overlay,
+				// overlay: camera_overlay,
 				highlightCodeOutline: true,
 				returnDetailedScanResult: true
 			}
@@ -85,20 +85,20 @@
 	<!-- Camera -->
 	<!-- svelte-ignore a11y-media-has-caption doesn't apply -->
 	<video bind:this={camera} class:hide={!scan} class="h-2/3">
-		<div class="border-green-600 rounded-lg" bind:this={camera_overlay} in:scale>
-			{#await scanner_animation}
-				<!-- Fade in -->
-				<div transition:fade>
+		<!-- <div class="border-green-600 rounded-lg" bind:this={camera_overlay} in:scale>
+			{#await scanner_animation} -->
+		<!-- Fade in -->
+		<!-- <div transition:fade>
 					{#if form?.success}
 						<img src="/checkmark.svg" alt="Accepted" />
 					{:else if form}
 						<img src="/cross.svg" alt="Rejected" />
 					{/if}
 				</div>
-			{:then}
-				<!-- Fade out -->
-			{/await}
-		</div>
+			{:then} -->
+		<!-- Fade out -->
+		<!-- {/await}
+		</div> -->
 	</video>
 
 	<!-- Toggle Camera -->
