@@ -86,25 +86,25 @@
 
 <!-- Camera -->
 <!-- svelte-ignore a11y-media-has-caption doesn't apply -->
-<video bind:this={camera} class:hide-video={!scan_active} class="h-[60vh]" />
-
-<div bind:this={camera_overlay}>
-	{#await scanner_animation}
-		<!-- Fade in -->
-		<div transition:fade>
-			<!-- Scale -->
-			<div in:scale>
-				{#if success}
-					<img src="/checkmark.svg" alt="Accepted" class="w-full h-full" />
-				{:else}
-					<img src="/cross.svg" alt="Rejected" class="w-full h-full" />
-				{/if}
+<video bind:this={camera} class:hide-video={!scan_active} class="h-[60vh]">
+	<div class="border-green-600 rounded-lg" bind:this={camera_overlay}>
+		{#await scanner_animation}
+			<!-- Fade in -->
+			<div transition:fade>
+				<!-- Scale -->
+				<div in:scale>
+					{#if success}
+						<img src="/checkmark.svg" alt="Accepted" class="w-full h-full" />
+					{:else}
+						<img src="/cross.svg" alt="Rejected" class="w-full h-full" />
+					{/if}
+				</div>
 			</div>
-		</div>
-	{:then}
-		<!-- Fade out -->
-	{/await}
-</div>
+		{:then}
+			<!-- Fade out -->
+		{/await}
+	</div>
+</video>
 
 <style>
 	.hide-video {
