@@ -1,25 +1,114 @@
 <script lang="ts">
 	import type { PageData, ActionData } from './$types';
 
+	import QrScanner from 'qr-scanner';
+	import { enhance } from '$app/forms';
+	import { onMount, onDestroy, tick } from 'svelte';
+	import { fade, scale } from 'svelte/transition';
+
 	export let data: PageData;
 	export let form: ActionData;
 
-	// let camera = false;
+	const duration = 1000;
+	const scanner_animation = new Promise((r) => (form ? setTimeout(r, duration) : r(void 0)));
+
+	let form_html: HTMLFormElement;
+
+	let party = form?.party ?? '';
+	let ticket = '';
+
+	let scan: boolean = false;
+	let qrScanner: QrScanner;
+	let camera: HTMLVideoElement;
+	let camera_overlay: HTMLDivElement;
+	let camera_list: Awaited<ReturnType<typeof QrScanner.listCameras>> = [];
+	let selected_camera: string;
+	onMount(async () => {
+		if (!QrScanner.hasCamera()) {
+			alert('No se detectó ninguna cámara');
+			return;
+		}
+
+		qrScanner = new QrScanner(
+			camera,
+			async (result) => {
+				ticket = result.data;
+				await tick();
+				form_html.dispatchEvent(new Event('submit'));
+			},
+			{
+				maxScansPerSecond: 5,
+				overlay: camera_overlay,
+				highlightCodeOutline: true,
+				returnDetailedScanResult: true
+			}
+		);
+
+		camera_list = await QrScanner.listCameras(true);
+		selected_camera = camera_list[0]?.id;
+
+		scan = true;
+	});
+
+	onDestroy(() => {
+		qrScanner?.destroy();
+	});
+
+	$: if (scan) {
+		qrScanner?.start();
+	} else {
+		qrScanner?.stop();
+	}
+
+	$: if (selected_camera) {
+		qrScanner?.setCamera(selected_camera);
+	}
 </script>
 
-<form class="flex flex-col items-center" method="POST">
+<form class="flex flex-col items-center space-y-4" method="POST" use:enhance bind:this={form_html}>
 	<!-- Party -->
-	<select name="party" value={form?.party ?? ''}>
+	<select name="party" bind:value={party}>
 		{#each data.parties as { name, slug }}
 			<option value={slug}>{name}</option>
 		{/each}
 	</select>
+
+	<!-- Camera Picker -->
+	<select name="camera" bind:value={selected_camera}>
+		{#each camera_list as { label, id }}
+			<option value={id}>{label}</option>
+		{/each}
+	</select>
+
 	<!-- Camera -->
-	<button on:click={() => alert('Not implemented yet')}>Activar cámara</button>
-	<!-- String -->
-	<input type="text" name="ticket" value={form?.id ?? ''} />
+	<!-- svelte-ignore a11y-media-has-caption doesn't apply -->
+	<video bind:this={camera} class:hide={!scan}>
+		<div class="border-green-600 rounded-lg" bind:this={camera_overlay} in:scale>
+			{#await scanner_animation}
+				<!-- Fade in -->
+				<div transition:fade>
+					{#if form?.success}
+						<img src="/checkmark.svg" alt="Accepted" />
+					{:else if form}
+						<img src="/cross.svg" alt="Rejected" />
+					{/if}
+				</div>
+			{:then}
+				<!-- Fade out -->
+			{/await}
+		</div>
+	</video>
+
+	<!-- Toggle Camera -->
+	<button on:click|preventDefault={() => (scan = !scan)}>
+		{scan ? 'Desactivar' : 'Activar'} cámara
+	</button>
+
+	<!-- QR Value -->
+	<input type="text" name="ticket" bind:value={ticket} class:hide={scan} />
+
 	<!-- Submit -->
-	<button type="submit">Verificar</button>
+	<button type="submit" class:hide={scan}>Verificar</button>
 </form>
 
 {#if form}
@@ -29,3 +118,9 @@
 		<p class="text-red-600">{form.message}</p>
 	{/if}
 {/if}
+
+<style>
+	.hide {
+		display: none;
+	}
+</style>

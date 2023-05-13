@@ -42,6 +42,7 @@
 		"@vercel/postgres": "^0.2.1",
 		"dayjs": "^1.11.7",
 		"mercadopago": "^1.5.16",
+		"qr-scanner": "^1.4.2",
 		"qrcode": "^1.5.3",
 		"sanity": "^3.10.1"
 	}

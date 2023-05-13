@@ -49,7 +49,6 @@ export const actions = {
 
 		if (!ticket) {
 			return fail(404, {
-				id,
 				party,
 				message: 'Ticket not found',
 				success: false
@@ -58,7 +57,6 @@ export const actions = {
 
 		if (ticket.used) {
 			return fail(410, {
-				id,
 				party,
 				message: 'Ticket already used',
 				success: false
@@ -69,7 +67,6 @@ export const actions = {
 
 		if (!auth_list) {
 			return fail(404, {
-				id,
 				party,
 				message: 'Party not found',
 				success: false
@@ -81,7 +78,6 @@ export const actions = {
 
 		if (!valid) {
 			return fail(403, {
-				id,
 				party,
 				message: 'Invalid ticket',
 				success: false
@@ -96,7 +92,6 @@ export const actions = {
 		} catch (error) {
 			console.error(id, error);
 			return fail(500, {
-				id,
 				party,
 				message: 'Failed to update ticket',
 				success: false
