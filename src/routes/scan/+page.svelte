@@ -119,7 +119,11 @@
 </form>
 
 <!-- Scan border -->
-<div class="border-2 border-green-600 rounded-lg w-4 h-4" bind:this={camera_overlay} in:scale>
+<div
+	class="border-2 border-green-600 rounded-lg absolute w-4 h-4"
+	bind:this={camera_overlay}
+	in:scale
+>
 	{#await scanner_animation}
 		<!-- Fade in -->
 		<div transition:fade>
