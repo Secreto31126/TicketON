@@ -26,8 +26,8 @@
 		// I even have to wait a tick for it to update
 		tick().then(() => {
 			if (success !== null) {
-				animated = true;
 				setTimeout(() => {
+					animated = true;
 					success = null;
 				}, duration);
 			}
