@@ -38,6 +38,7 @@
 	"type": "module",
 	"dependencies": {
 		"@sanity/client": "^6.0.1",
+		"@vercel/analytics": "^1.0.1",
 		"@vercel/kv": "^0.2.0",
 		"@vercel/postgres": "^0.2.1",
 		"dayjs": "^1.11.7",
