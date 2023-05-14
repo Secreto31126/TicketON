@@ -1,9 +1,9 @@
 <script lang="ts">
 	import type { PageData, ActionData } from './$types';
 
+	import { tick } from 'svelte';
 	import { enhance } from '$app/forms';
 	import Scanner from '$lib/components/scanner.svelte';
-	import { tick } from 'svelte';
 
 	export let data: PageData;
 	export let form: ActionData;
