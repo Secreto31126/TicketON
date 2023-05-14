@@ -58,6 +58,17 @@ const Party = defineType({
 			name: 'price',
 			type: 'number',
 			validation: (Rule) => Rule.required()
+		}),
+		defineField({
+			title: 'Emails autorizados',
+			name: 'emails',
+			type: 'array',
+			of: [
+				{
+					type: 'string'
+				}
+			],
+			validation: (Rule) => Rule.required()
 		})
 	]
 });

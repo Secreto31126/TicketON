@@ -22,8 +22,8 @@ export async function getParty(slug: string): Promise<PartyQuery | null> {
 }
 
 type PartiesQuery = { name: string; date: string; slug: string }[];
-export async function getPartiesList(email?: string): Promise<PartiesQuery> {
-	const query = `*[_type == "party"] { name, date, "slug": slug.current }`;
+export async function getPartiesList(email: string): Promise<PartiesQuery> {
+	const query = `*[_type == "party" && "${email}" in emails] { name, date, "slug": slug.current }`;
 	const data = await client.fetch<PartiesQuery>(query);
 	return data ?? [];
 }

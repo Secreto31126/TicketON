@@ -8,7 +8,7 @@ import { error, fail } from '@sveltejs/kit';
 export const load = (async () => {
 	let parties;
 	try {
-		parties = await getPartiesList();
+		parties = await getPartiesList('email');
 	} catch (e) {
 		console.error(e);
 		throw error(500, 'Failed to load parties');
