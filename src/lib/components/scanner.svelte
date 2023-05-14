@@ -27,6 +27,7 @@
 			},
 			{
 				maxScansPerSecond: 1,
+				highlightScanRegion: true,
 				highlightCodeOutline: true,
 				returnDetailedScanResult: true
 			}
@@ -53,6 +54,11 @@
 	}
 </script>
 
+<svelte:head>
+	<link rel="prefetch" href="/checkmark.svg" />
+	<link rel="prefetch" href="/cross.svg" />
+</svelte:head>
+
 <!-- Camera Picker -->
 {#if camera_list && camera_list.length > 1}
 	<select name="camera" bind:value={selected_camera}>
@@ -61,11 +67,6 @@
 		{/each}
 	</select>
 {/if}
-
-<svelte:head>
-	<link rel="prefetch" href="/checkmark.svg" />
-	<link rel="prefetch" href="/cross.svg" />
-</svelte:head>
 
 <!-- Camera -->
 <div class="relative">
@@ -87,6 +88,13 @@
 		</div>
 	{/if}
 </div>
+
+<!-- Toggle Camera -->
+{#if qrScanner}
+	<button on:click|preventDefault={() => (scan_active = !scan_active)}>
+		{scan_active ? 'Desactivar' : 'Activar'} cámara
+	</button>
+{/if}
 
 <style>
 	.hide-video {
