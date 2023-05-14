@@ -73,7 +73,10 @@
 	<!-- svelte-ignore a11y-media-has-caption doesn't apply -->
 	<video bind:this={camera} class:hide-video={!scan_active} class="h-[60vh]" />
 	{#if success !== null}
-		<div class="absolute top-0 left-0 flex items-center justify-center w-full h-full z-10">
+		<div
+			class="absolute top-0 left-0 flex items-center justify-center h-auto z-10"
+			style="width: {camera.style.width}px;"
+		>
 			<!-- Fade in -->
 			<div transition:fade>
 				<!-- Scale -->
