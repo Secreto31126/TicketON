@@ -23,7 +23,7 @@
 	$: {
 		// I have NO IDEA why success isn't triggering the reactivity
 		form;
-		// I even have to wait a tick to update
+		// I even have to wait a tick for it to update
 		tick().then(() => {
 			if (success !== null) {
 				animated = true;
