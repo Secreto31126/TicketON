@@ -81,6 +81,10 @@
 	});
 </script>
 
+<svelte:head>
+	<title>Entradas para {data.party.name}</title>
+</svelte:head>
+
 <div class="flex flex-col md:flex-row items-center md:items-baseline justify-center mt-2 md:m-0">
 	<div class="md:flex-auto flex flex-col items-center space-y-2 md:w-min mx-4 md:mx-16">
 		<div class="flex w-full justify-between">

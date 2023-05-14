@@ -16,6 +16,10 @@
 	});
 </script>
 
+<svelte:head>
+	<title>TicketON - Manage</title>
+</svelte:head>
+
 <div bind:this={app} class="h-screen m-0 overflow-hidden antialiased" />
 
 <style lang="postcss">

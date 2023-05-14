@@ -41,6 +41,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>TicketON - Scan</title>
+</svelte:head>
+
 <form class="flex flex-col items-center space-y-2 mt-4" method="POST" use:enhance>
 	<!-- Party -->
 	<select name="party" bind:value={party}>

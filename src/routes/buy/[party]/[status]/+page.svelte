@@ -4,6 +4,10 @@
 	export let data: PageData;
 </script>
 
+<svelte:head>
+	<title>TicketON</title>
+</svelte:head>
+
 <div class="text-center">
 	<h1 class="first-letter:uppercase">{data.status}</h1>
 	{#if data.ticket}
