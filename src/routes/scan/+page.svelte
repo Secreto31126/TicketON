@@ -9,29 +9,39 @@
 	export let form: ActionData;
 
 	let party = form?.party ?? (data.parties.length === 1 ? data.parties[0].slug : '');
+	let scan_active: boolean;
 	let ticket = '';
 
 	// Everytime form changes, set animated to false
-	$: animated = form && false;
+	let animated: boolean;
+	$: animated = !!form && false;
 
-	let scan_active: boolean;
-	$: success = !animated ? form?.success ?? null : null;
-	$: console.log('success', success);
+	let success: boolean | null = null;
+	$: success = animated ? null : form?.success ?? null;
 
 	const duration = 1000;
-	$: if (typeof success === 'boolean' && !animated) {
-		animated = true;
-		console.log('animated', success);
-		setTimeout(() => (success = null), duration);
+	$: {
+		// I have NO IDEA why success isn't triggering the reactivity
+		form;
+		// I even have to wait a tick to update
+		tick().then(() => {
+			if (success !== null) {
+				animated = true;
+				setTimeout(() => {
+					success = null;
+				}, duration);
+			}
+		});
 	}
 
 	let submit: HTMLButtonElement;
 	$: if (scan_active && ticket && submit && success === null) {
+		// Let the form update the ticket value
 		tick().then(() => submit.click());
 	}
 </script>
 
-<form class="flex flex-col items-center space-y-4" method="POST" use:enhance>
+<form class="flex flex-col items-center space-y-2 mt-4" method="POST" use:enhance>
 	<!-- Party -->
 	<select name="party" bind:value={party}>
 		{#each data.parties as { name, slug }}
@@ -43,18 +53,13 @@
 		<!-- Camera -->
 		<Scanner bind:data={ticket} bind:scan_active bind:success />
 
-		<!-- Toggle Camera -->
-		<button on:click|preventDefault={() => (scan_active = !scan_active)}>
-			{scan_active ? 'Desactivar' : 'Activar'} cámara
-		</button>
-
 		<!-- QR Value -->
 		<input
 			type="text"
 			name="ticket"
 			bind:value={ticket}
 			class:hide={scan_active}
-			class="border-2 rounded-md border-black text-center"
+			class="border-2 rounded-md border-black text-center m-0"
 		/>
 
 		<!-- Submit -->
