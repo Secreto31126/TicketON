@@ -32,7 +32,7 @@ export const load = (async ({ url, params }) => {
 				quantity: 1,
 				unit_price: party.price,
 				picture_url: party.image,
-				description: 'Hi'
+				description: 'Hi :)'
 			}
 		],
 		back_urls: {
@@ -45,6 +45,7 @@ export const load = (async ({ url, params }) => {
 		},
 		expires: true,
 		expiration_date_to: dayjs().add(30, 'minutes').format('YYYY-MM-DDTHH:mm:ss.SSS-03:00'),
+		external_reference: params.party,
 		binary_mode: true
 	};
 

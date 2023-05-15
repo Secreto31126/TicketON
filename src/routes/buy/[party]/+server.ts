@@ -34,7 +34,10 @@ export const POST: RequestHandler = async ({ params, request }) => {
 
 	let payment;
 	try {
-		payment = await mercadopago.payment.save(body as CreatePaymentPayload);
+		payment = await mercadopago.payment.save({
+			...body,
+			external_reference: params.party
+		} as CreatePaymentPayload);
 	} catch (e) {
 		throw error(500, 'Internal server error');
 	}
