@@ -68,7 +68,7 @@ export const load = (async ({ params, url, fetch }) => {
 
 		let ticket: Awaited<ReturnType<typeof kv.hgetall<Ticket>>>;
 		try {
-			ticket = await kv.hgetall<Ticket>(payment_id);
+			ticket = await kv.hgetall<Ticket>(`ticket:${payment_id}`);
 		} catch (e) {
 			console.error(payment_id, e);
 			throw error(500, 'Failed to check ticket');
@@ -79,11 +79,11 @@ export const load = (async ({ params, url, fetch }) => {
 		}
 
 		try {
-			await kv.hset(payment_id, {
+			await kv.hset(`ticket:${payment_id}`, {
 				party: party_id,
 				used: false
 			} satisfies Ticket);
-			await kv.expireat(payment_id, dayjs(party.date).add(1, 'day').unix());
+			await kv.expireat(`ticket:${payment_id}`, dayjs(party.date).add(1, 'day').unix());
 		} catch (e) {
 			console.error(payment_id, e);
 			throw error(500, 'Failed to add ticket');

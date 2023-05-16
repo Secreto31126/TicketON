@@ -9,7 +9,7 @@ import QRCode from 'qrcode';
 export const load = (async ({ params }) => {
 	let ticket: Ticket | null = null;
 	try {
-		ticket = await kv.hgetall<Ticket>(params.ticket);
+		ticket = await kv.hgetall<Ticket>(`ticket:${params.ticket}`);
 	} catch (e) {
 		throw error(500, {
 			message: 'Error fetching ticket'

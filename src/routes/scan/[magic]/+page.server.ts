@@ -45,7 +45,7 @@ export const actions = {
 			});
 		}
 
-		const ticket = await kv.hgetall<Ticket>(id);
+		const ticket = await kv.hgetall<Ticket>(`ticket:${id}`);
 
 		if (!ticket) {
 			return fail(404, {
@@ -85,7 +85,7 @@ export const actions = {
 		}
 
 		try {
-			await kv.hset(id, {
+			await kv.hset(`ticket:${id}`, {
 				...ticket,
 				used: true
 			});
