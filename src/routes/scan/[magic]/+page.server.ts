@@ -3,13 +3,32 @@ import type { Ticket } from '$lib/types/ticket';
 
 import { getPartiesList, getParty } from '$lib/server/sanity';
 import { kv } from '@vercel/kv';
-import { error, fail } from '@sveltejs/kit';
+import { error, fail, redirect } from '@sveltejs/kit';
 
-export const load = (async () => {
+export const load = (async ({ params, cookies }) => {
+	if (!params.magic) {
+		throw redirect(303, '/scan');
+	}
+
+	let email;
+	try {
+		// If the email is found, it means the user is allowed to control at least one party
+		email = await kv.get<string>(`mail:${params.magic}`);
+	} catch (e) {
+		throw error(500, 'Failed to load email');
+	}
+
+	if (!email) {
+		throw error(401, 'Invalid magic link, it might have expired, please log in again');
+	}
+
+	cookies.set('email', email, {
+		maxAge: 60 * 60 * 2
+	});
+
 	let parties;
 	try {
-		// TODO: Get email from session
-		parties = await getPartiesList('email');
+		parties = await getPartiesList(email);
 	} catch (e) {
 		console.error(e);
 		throw error(500, 'Failed to load parties');
@@ -31,7 +50,7 @@ export const actions = {
 		const party = data.get('party') as string | null;
 		if (!party) {
 			return fail(400, {
-				message: 'Missing party slug',
+				message: 'Missing party selection',
 				success: false
 			});
 		}
@@ -63,23 +82,12 @@ export const actions = {
 			});
 		}
 
-		const auth_list = await getParty(ticket.party);
+		const party_object = await getParty(ticket.party);
 
-		if (!auth_list) {
+		if (!party_object) {
 			return fail(404, {
 				party,
 				message: 'Party not found',
-				success: false
-			});
-		}
-
-		// TODO: Verify if valid
-		const valid = true;
-
-		if (!valid) {
-			return fail(403, {
-				party,
-				message: 'Invalid ticket',
 				success: false
 			});
 		}

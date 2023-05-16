@@ -47,7 +47,7 @@
 
 <form class="flex flex-col items-center space-y-2 mt-4" method="POST" use:enhance>
 	<!-- Party -->
-	<select name="party" bind:value={party}>
+	<select name="party" bind:value={party} required>
 		{#each data.parties as { name, slug }}
 			<option value={slug}>{name}</option>
 		{/each}
@@ -64,6 +64,7 @@
 			bind:value={ticket}
 			class:hide={scan_active}
 			class="border-2 rounded-md border-black text-center m-0"
+			required
 		/>
 
 		<!-- Submit -->
