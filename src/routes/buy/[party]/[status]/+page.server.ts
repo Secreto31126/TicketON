@@ -49,6 +49,7 @@ export const load = (async ({ params, url, fetch }) => {
 		}
 
 		email = payment.body.payer.email;
+		console.log(payment.body.payer);
 
 		if (!email) {
 			throw error(500, 'Missing payer email');
