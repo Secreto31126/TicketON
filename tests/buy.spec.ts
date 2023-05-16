@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-const domain = 'localhost:3000';
+const domain = 'https://ticketon.vercel.app';
 
 test('test', async ({ page }) => {
 	await page.goto(domain + '/buy/test');
@@ -29,5 +29,7 @@ test('test', async ({ page }) => {
 	await page.getByPlaceholder('ejemplo@email.com').click();
 	await page.getByPlaceholder('ejemplo@email.com').fill('ejemplo@gmail.com');
 	await page.getByRole('button', { name: 'Pagar' }).click();
-	await page.waitForURL(domain + '/buy/test/success?*');
+	await page.waitForURL(domain + '/buy/test/success**');
+	// Check if there's a button with the text "Abrir QR Pass"
+	await page.waitForSelector('text="Abrir QR Pass"');
 });
