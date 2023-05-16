@@ -24,7 +24,7 @@ export default async function sendMail(
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({
 			API_TOKEN: GOOGLE_APP_SCRIPT_TOKEN,
-			to: 'tomyraiti@gmail.com',
+			to,
 			subject,
 			body,
 			images
