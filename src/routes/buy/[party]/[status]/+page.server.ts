@@ -98,11 +98,11 @@ export const load = (async ({ params, url, fetch }) => {
 
 		try {
 			await sendMail(
+				fetch,
 				email,
 				'¡Ya tenés tu entrada!',
 				`¡Gracias por tu compra!<br><br>Acá tenés tu QR Pass para ${party.name} el ${party.date}:<br><br><a href="${qr_url}"><img src="cid:qr" width="256px" /><br>Haz click aquí si no puedes ver la imagen</a>`,
-				{ qr },
-				fetch
+				{ qr }
 			);
 		} catch (e) {
 			console.error(payment_id, e);

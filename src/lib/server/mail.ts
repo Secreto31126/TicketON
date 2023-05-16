@@ -13,11 +13,11 @@ type APIResponse = {
 );
 
 export default async function sendMail(
+	fetch: typeof window.fetch,
 	to: string,
 	subject: string,
 	body: string,
-	images: { [key: string]: string } | undefined,
-	fetch: typeof window.fetch
+	images: { [key: string]: string } | undefined
 ): Promise<number> {
 	const req = await fetch(GOOGLE_APP_SCRIPT_URL, {
 		method: 'POST',
