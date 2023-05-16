@@ -17,7 +17,7 @@ export default async function sendMail(
 	to: string,
 	subject: string,
 	body: string,
-	images: { [key: string]: string } | undefined
+	images?: { [key: string]: string }
 ): Promise<number> {
 	const req = await fetch(GOOGLE_APP_SCRIPT_URL, {
 		method: 'POST',
